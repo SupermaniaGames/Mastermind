@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Supermania Mastermind</title>
+<link rel="manifest" href="manifest.json?v=1">
+<meta name="theme-color" content="#17181a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Supermania Mastermind">
+<meta property="og:description" content="Crack the secret colour code with friends, the computer, or on one phone.">
+<meta property="og:image" content="https://supermaniagames.github.io/mastermind/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head><body>
+<div id="splash"><img src="icon-512.png" alt="" onerror="this.parentNode.remove()"></div>
+<script>setTimeout(function(){var s=document.getElementById('splash');if(s)s.remove()},3000)</script>
+<main id="app">
+
+<section class="sc" id="home">
+ <div id="me"></div>
+ <img id="logo" src="icon-512.png" alt="Supermania Mastermind" onerror="this.hidden=true;document.getElementById('wm').hidden=false">
+ <h1 id="wm" hidden><small>SUPERMANIA</small>MASTERMIND</h1>
+ <div class="grid">
+  <button class="mode" data-go="friends"><span>👥</span><b>Play with friends</b></button>
+  <button class="mode" data-go="bot"><span>🤖</span><b>Computer</b></button>
+  <button class="mode wide" data-go="pass"><span>🎲</span><b>Pass N Play</b></button>
+ </div>
+ <button class="btn" id="howbtn" data-go="how">❓ How to play</button>
+ <button class="btn" id="shareapp">📤 Share app</button>
+ <button class="btn p" id="install">⬇ Install app</button>
+ <p class="credit">Made by <img src="supermania-logo.png" alt="Supermania Games" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:this.alt}))"> · Presented by <img src="boring-logo.png" alt="Boring Games" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:this.alt}))"></p>
+</section>
+
+<section class="sc" id="auth" hidden>
+ <h2>Sign in to play online</h2>
+ <input id="u" placeholder="Username" autocomplete="username" maxlength="14" autocapitalize="off">
+ <input id="p" type="password" placeholder="Password (6+ characters)" autocomplete="current-password">
+ <button class="btn p" id="signin">Sign in</button>
+ <button class="btn" id="signup">Create account</button>
+ <button class="btn" id="guest">Play as guest</button>
+ <p class="hint">Guests can play online right away. Type a name above if you like.</p>
+ <p class="err" id="aerr"></p>
+ <button class="btn" data-back>Back</button>
+</section>
+
+<section class="sc" id="chars" hidden>
+ <h2>Choose your character</h2>
+ <div id="avgrid"></div>
+ <button class="btn p" data-back>Done</button>
+</section>
+
+<section class="sc" id="setup" hidden>
+ <h2>New game</h2>
+ <div class="seg" data-k="mode"><button data-v="bot">Computer</button><button data-v="pass">Pass N Play</button></div>
+ <p class="lbl">Code length</p>
+ <div class="seg" data-k="len"><button data-v="4">4 pegs</button><button data-v="5">5 pegs</button></div>
+ <p class="lbl">Colours</p>
+ <div class="seg" data-k="nc"><button data-v="6">6</button><button data-v="8">8</button></div>
+ <p class="lbl">Repeated colours in the code</p>
+ <div class="seg" data-k="rep"><button data-v="on">On</button><button data-v="off">Off</button></div>
+ <p class="lbl">Guesses</p>
+ <div class="seg" data-k="max"><button data-v="8">8</button><button data-v="10">10</button><button data-v="12">12</button></div>
+ <button class="btn p" id="play">Play</button>
+ <button class="btn" data-back>Back</button>
+</section>
+
+<section class="sc" id="friends" hidden>
+ <h2>Play with friends</h2>
+ <button class="btn p" id="create">Create room</button>
+ <p>or enter a room code</p>
+ <input id="code" inputmode="numeric" maxlength="4" placeholder="4-digit code">
+ <button class="btn" id="join">Join room</button>
+ <p class="err" id="ferr"></p>
+ <button class="btn" data-back>Back</button>
+</section>
+
+<section class="sc" id="how" hidden>
+ <h2>How to play</h2>
+ <div class="seg" data-k="how"><button data-v="basics">Basics</button><button data-v="scoring">Scoring</button><button data-v="modes">Modes</button></div>
+ <div class="hp" data-t="basics">
+  <ul>
+   <li>One player hides a secret code: a row of 4 coloured pegs (or 5 in the longer game). The other player, the codebreaker, has to crack it.</li>
+   <li>Tap a colour at the bottom to fill the next hole in the highlighted row, then tap Submit. Tap a peg in the row to take it out again.</li>
+   <li>After each guess, small feedback pegs appear beside the row. A black peg means one peg is the right colour in the right place. A white peg means one peg is the right colour in the wrong place.</li>
+   <li>The feedback pegs do not tell you which of your pegs they are about, and their order means nothing. Use them to work out the code before your guesses run out.</li>
+  </ul>
+  <div class="minis">
+   <div class="mn"><div class="mx" data-s="C:RGBY/G:RPPP|k..."></div><span>Black: right colour, right place</span></div>
+   <div class="mn"><div class="mx" data-s="C:RGBY/G:PPRP|w..."></div><span>White: right colour, wrong place</span></div>
+   <div class="mn"><div class="mx" data-s="C:RGBY/G:PPPP|...."></div><span>No pegs: none of those colours are in the code</span></div>
+   <div class="mn"><div class="mx" data-s="C:RGBY/G:RGBY|kkkk"></div><span>Four black pegs: code cracked</span></div>
+  </div>
+ </div>
+ <div class="hp" data-t="scoring" hidden>
+  <ul>
+   <li>Crack the code before you run out of guesses. If you do not, the codemaker wins and the code is revealed.</li>
+   <li>Each peg in the code can only be matched once. If the code has two reds and you guess four reds, you get at most two pegs for red.</li>
+   <li>Black pegs are counted first. White pegs are then given for the colours that are left over, so a colour is never counted twice.</li>
+   <li>With repeats off, the code never uses a colour twice. Your guesses can still repeat a colour if you want to test one.</li>
+   <li>Fewer guesses is better. In a series with friends, the player who cracks the code in fewer guesses wins the round.</li>
+  </ul>
+  <div class="minis">
+   <div class="mn"><div class="mx" data-s="C:RRGB/G:RRRR|kk.."></div><span>Only two reds in the code, so two pegs</span></div>
+   <div class="mn"><div class="mx" data-s="C:RGBY/G:GRBP|kww."></div><span>One black, two white</span></div>
+  </div>
+ </div>
+ <div class="hp" data-t="modes" hidden><ul>
+  <li>Computer: you try to crack a code the computer made. Easy to Expert change how many guesses you get. You can also let the computer try to crack your code.</li>
+  <li>Pass N Play: one phone, two people. One player sets the code while the other looks away, then you pass the phone and the second player guesses. Press Replay to swap roles.</li>
+  <li>Play with friends: one player creates a room and shares the 4-digit code or the WhatsApp link. You take turns being codemaker and codebreaker in a best of 3 series. You do not have to be online at the same time: leave and come back later to carry on.</li>
+  <li>Setup options: code length 4 or 5, 6 or 8 colours, repeats on or off, and 8, 10 or 12 guesses.</li>
+  <li>Tip: start with a guess that uses several different colours, then use the feedback to rule colours in or out.</li>
+ </ul></div>
+ <button class="btn p" data-back>Back</button>
+</section>
+
+<section class="sc" id="lobby" hidden>
+ <h2>Room code</h2>
+ <div id="rcode"></div>
+ <ul id="plist"></ul>
+ <p id="lmsg"></p>
+ <button class="btn p" id="wa">Share on WhatsApp</button>
+ <button class="btn" id="copy">Copy invite link</button>
+ <p class="hint" id="link"></p>
+ <button class="btn p" id="start" hidden>Start game</button>
+ <button class="btn" data-back>Leave</button>
+</section>
+
+<section class="sc" id="game" hidden>
+ <div id="bar"><button class="btn" data-back>Menu</button><div id="status"></div><button class="btn" id="mute" aria-label="Sound on or off">Sound</button></div>
+ <div class="crow" id="cards"></div>
+ <div class="hint" id="series" hidden></div>
+ <div class="hint" id="note"></div>
+ <div id="board"></div>
+ <div id="pal"></div>
+ <div id="tools"><button class="btn" id="clearbtn">Clear</button><button class="btn p" id="submit">Submit</button></div>
+</section>
+
+</main>
+
+<button id="chatbtn" hidden aria-label="Chat">💬</button>
+
+<div id="result" hidden>
+ <div id="confetti"></div>
+ <div class="rbox">
+  <div class="rtitle" id="rtitle">Congratulations!</div>
+  <div id="rpegs"></div>
+  <div id="rlist"></div>
+  <div class="rbtns"><button class="btn" id="rmenu">Menu</button><button class="btn" id="rshare">Share</button><button class="btn p" id="rreplay">Replay</button></div>
+ </div>
+</div>
+<div id="dlg" hidden>
+ <div class="rbox">
+  <div class="rtitle" id="dt"></div>
+  <p id="dp"></p>
+  <div class="rbtns"><button class="btn" id="dno">Stay</button><button class="btn p" id="dyes">Leave</button></div>
+ </div>
+</div>
+
+<div id="chat" hidden>
+ <div id="chead"><b>Chat</b><button id="cclose" aria-label="Close chat">✕</button></div>
+ <div id="msgs"></div>
+ <div id="cin"><input id="ct" maxlength="200" placeholder="Message"><button class="btn p" id="send">Send</button></div>
+</div>
+
+<script type="module" src="main.js"></script>
+</body></html>
